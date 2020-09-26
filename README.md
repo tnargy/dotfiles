@@ -1,7 +1,6 @@
 # dotfiles
 My Simple Dotfiles
 
-- emacs
 - tmux
 - nvim
 - alacritty
