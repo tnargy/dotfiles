@@ -7,3 +7,4 @@ My Simple Dotfiles
 - i3
 - polybar
 - ranger
+- xmonad
