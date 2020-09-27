@@ -1,0 +1,12 @@
+import XMonad
+
+myTerm = "alacritty"
+myModMask = mod4Mask
+myBorderWidth = 2
+
+main = do
+  xmonad $ def
+    { terminal    = myTerm
+    , modMask     = myModMask
+    , borderWidth = myBorderWidth
+    }
