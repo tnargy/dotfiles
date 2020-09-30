@@ -39,7 +39,7 @@ bindsym $mod+Shift+Escape	             exec i3-msg exit
 # bindsym $mod+Shift+BackSpace	   exec --no-startup-id prompt "Reboot computer?" $reboot
 
 # space
-bindsym $mod+space 			            exec --no-startup-id rofi-menu 
+bindsym $mod+space 			            exec --no-startup-id rofi -show window
 
 
 # #---Letter Key Bindings---# #
