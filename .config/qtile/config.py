@@ -1,3 +1,4 @@
+import os
 from typing import List  # noqa: F401
 
 from libqtile import bar, layout, widget, images
@@ -106,7 +107,7 @@ colors = [["#292d3e", "#292d3e"],  # panel background
           ["#e1acff", "#e1acff"]]  # window name
 
 widget_defaults = dict(
-    font='sans',
+    font='Hack Regular Nerd Font Complete',
     fontsize=12,
     padding=3,
     background=colors[2]
@@ -150,7 +151,7 @@ screens = [
                 widget.Sep(
                     linewidth=0,
                     padding=40,
-                    foreground=colors[2],
+                    foregaound=colors[2],
                     background=colors[0]
                 ),
                 widget.WindowName(
