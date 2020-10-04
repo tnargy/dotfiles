@@ -27,10 +27,9 @@ let g:which_key_map['.'] = [ ':e $MYVIMRC'                , 'edit init.vim' ]
 let g:which_key_map['%'] = [ ':so %'                      , 'source %' ]
 let g:which_key_map['e'] = [ ':CocCommand explorer'       , 'explorer' ]
 let g:which_key_map['h'] = [ '<C-W>s'                     , 'split below']
-let g:which_key_map['r'] = [ ':Ranger'                    , 'ranger' ]
+let g:which_key_map['n'] = [ ':noh'                       , 'no highlight' ]
+let g:which_key_map['r'] = [ ':RnvimrToggle'              , 'ranger' ]
 let g:which_key_map['v'] = [ '<C-W>v'                     , 'split right']
-
-let g:which_key_map['w'] = [ ':w'                         , 'write']
 
 let g:which_key_map.q = {
       \ 'q' : [':q'            , 'quit']
