@@ -39,7 +39,7 @@ keys = [
         lazy.spawn(terminal),
         desc="Launch terminal"),
     Key([mod, "shift"], "Return",
-        lazy.spawn("dmenu-run"),
+        lazy.spawn("dmenu_run"),
         desc="Launch dmenu"),
     Key([mod], "w",
         lazy.spawn("brave"),
