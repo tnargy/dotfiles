@@ -42,14 +42,4 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 	" Snippets
 	Plug 'honza/vim-snippets'
 
-	" Godot
-	Plug 'habamax/vim-godot'
-
-	" React
-	Plug 'pangloss/vim-javascript'
-	Plug 'mxw/vim-jsx'
-
-	" Emmet
-	Plug 'mattn/emmet-vim'
-
 call plug#end()
