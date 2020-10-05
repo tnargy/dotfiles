@@ -31,7 +31,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 	Plug 'norcalli/nvim-colorizer.lua'
 	Plug 'junegunn/rainbow_parentheses.vim'
 	
-	# Other
+	" Other
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	Plug 'liuchengxu/vim-which-key'
 	Plug 'voldikss/vim-floaterm'
