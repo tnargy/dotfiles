@@ -41,14 +41,14 @@ keys = [
     Key([mod, "shift"], "Return",
         lazy.spawn("dmenu_run"),
         desc="Launch dmenu"),
+    Key([mod], "q",
+        lazy.window.kill(),
+        desc="Kill Focused Window"),
     Key([mod], "w",
         lazy.spawn("brave"),
         desc="Launch Brave"),
-    Key([mod], "o",
-        lazy.spawn("onboard"),
-        desc="Launch Onscreen Keyboard"),
     Key([mod], "v",
-        lazy.spawn(terminal+"-e nvim"),
+        lazy.spawn(terminal+" -e nvim"),
         desc="Launch NVIM"),
 
     # Toggle between different layouts as defined below
@@ -63,15 +63,15 @@ groups = [Group(i) for i in "123"]
 
 for i in groups:
     keys.extend([
-        # mod1 + letter of group = switch to group
+        # mod4 + letter of group = switch to group
         Key([mod], i.name, lazy.group[i.name].toscreen(),
             desc="Switch to group {}".format(i.name)),
 
-        # mod1 + shift + letter of group = switch to & move focused window to group
+        # mod4 + shift + letter of group = switch to & move focused window to group
         Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True),
             desc="Switch to & move focused window to group {}".format(i.name)),
         # Or, use below if you prefer not to switch to that group.
-        # # mod1 + shift + letter of group = move focused window to group
+        # # mod4 + shift + letter of group = move focused window to group
         # Key([mod, "shift"], i.name, lazy.window.togroup(i.name),
         #     desc="move focused window to group {}".format(i.name)),
     ])
@@ -124,10 +124,14 @@ screens = [
                     foreground=colors[2],
                     background=colors[0]
                 ),
-                widget.Image(
-                    filename="~/.config/qtile/icons/python.png",
+                widget.TextBox(
+                    text='⌨',
+                    background=colors[0],
+                    foreground=colors[3],
+                    padding=0,
+                    fontsize=10,
                     mouse_callbacks={
-                        'Button1': lambda qtile: qtile.cmd_spawn('dmenu_run')}
+                        'Button1': lambda qtile: qtile.cmd_spawn('onboard')}
                 ),
                 widget.GroupBox(
                     fontsize=9,
@@ -162,96 +166,41 @@ screens = [
                 widget.TextBox(
                     text='',
                     background=colors[0],
-                    foreground=colors[4],
-                    padding=0,
-                    fontsize=37
-                ),
-                widget.TextBox(
-                    text=" ₿",
-                    padding=0,
-                    foreground=colors[2],
-                    background=colors[4],
-                    fontsize=12
-                ),
-                widget.TextBox(
-                    text='',
-                    background=colors[4],
                     foreground=colors[5],
-                    padding=0,
-                    fontsize=37
-                ),
-                widget.TextBox(
-                    text=" 🌡",
-                    padding=2,
-                    foreground=colors[2],
-                    background=colors[5],
-                    fontsize=11
-                ),
-                widget.ThermalSensor(
-                    foreground=colors[2],
-                    background=colors[5],
-                    threshold=90,
-                    padding=5
-                ),
-                widget.TextBox(
-                    text='',
-                    background=colors[5],
-                    foreground=colors[4],
-                    padding=0,
-                    fontsize=37
+                    padding=-7,
+                    fontsize=40
                 ),
                 widget.TextBox(
                     text=" ⟳",
                     padding=2,
                     foreground=colors[2],
-                    background=colors[4],
+                    background=colors[5],
                     fontsize=14
                 ),
                 widget.Pacman(
                     update_interval=1800,
                     foreground=colors[2],
                     mouse_callbacks={'Button1': lambda qtile: qtile.cmd_spawn(
-                        terminal + ' -e sudo pacman -Syu')},
-                    background=colors[4]
+                        terminal + ' -e yay -Syu')},
+                    background=colors[5]
                 ),
                 widget.TextBox(
                     text="Updates",
                     padding=5,
                     mouse_callbacks={'Button1': lambda qtile: qtile.cmd_spawn(
-                        terminal + ' -e sudo pacman -Syu')},
+                        terminal + ' -e yay -Syu')},
                     foreground=colors[2],
-                    background=colors[4]
-                ),
-                widget.TextBox(
-                    text='',
-                    background=colors[4],
-                    foreground=colors[5],
-                    padding=0,
-                    fontsize=37
-                ),
-                widget.TextBox(
-                    text=" 🖬",
-                    foreground=colors[2],
-                    background=colors[5],
-                    padding=0,
-                    fontsize=14
-                ),
-                widget.Memory(
-                    foreground=colors[2],
-                    background=colors[5],
-                    mouse_callbacks={
-                        'Button1': lambda qtile: qtile.cmd_spawn(terminal + ' -e ytop')},
-                    padding=5
+                    background=colors[5]
                 ),
                 widget.TextBox(
                     text='',
                     background=colors[5],
                     foreground=colors[4],
-                    padding=0,
-                    fontsize=37
+                    padding=-7,
+                    fontsize=40
                 ),
                 widget.Net(
-                    interface="mlan0",
+                    interface="enp0s3",
                     format='{down} ↓↑ {up}',
                     foreground=colors[2],
                     background=colors[4],
@@ -261,8 +210,8 @@ screens = [
                     text='',
                     background=colors[4],
                     foreground=colors[5],
-                    padding=0,
-                    fontsize=37
+                    padding=-7,
+                    fontsize=40
                 ),
                 widget.TextBox(
                     text=" Vol:",
@@ -279,8 +228,8 @@ screens = [
                     text='',
                     background=colors[5],
                     foreground=colors[4],
-                    padding=0,
-                    fontsize=37
+                    padding=-7,
+                    fontsize=40
                 ),
                 widget.CurrentLayoutIcon(
                     custom_icon_paths=[os.path.expanduser(
@@ -299,8 +248,8 @@ screens = [
                     text='',
                     background=colors[4],
                     foreground=colors[5],
-                    padding=0,
-                    fontsize=37
+                    padding=-7,
+                    fontsize=40
                 ),
                 widget.Clock(
                     foreground=colors[2],
@@ -316,6 +265,12 @@ screens = [
                 widget.Systray(
                     background=colors[0],
                     padding=5
+                ),
+                widget.Sep(
+                    linewidth=0,
+                    padding=10,
+                    foreground=colors[0],
+                    background=colors[5]
                 ),
             ],
             24,
