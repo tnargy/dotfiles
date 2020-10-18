@@ -1,0 +1,8 @@
+#!/bin/bash
+sudo apt update
+sudo apt upgrade -y
+sudo apt remove ssh
+sudo apt install fish fzf git neovim netcat nodejs npm ranger ripgrep silversearcher-ag ssh tmux
+git clone https://github.com/tnargy/dotfiles
+ln -s dotfiles/.tmux.conf
+ln -s dotfiles/.config
