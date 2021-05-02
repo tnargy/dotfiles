@@ -1,38 +1,50 @@
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(display-time-mode t)
- '(global-command-log-mode t)
- '(inhibit-startup-screen t)
- '(ivy-mode t)
- '(menu-bar-mode nil)
- '(package-selected-packages
-   '(org-bullets evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful ivy-rich which-key rainbow-delimiters doom-modeline counsel ivy use-package exwm))
- '(scroll-bar-mode nil)
- '(set-fringe-mode 10)
- '(tool-bar-mode nil)
- '(visible-bell t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+#+title Emacs Configuration
+#+PROPERTY: header-args:emacs-lisp :tangle ./init.el
 
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(column-number-mode)
-(global-display-line-numbers-mode t)
+* Basic UI Configuration
+#+begin_src emacs-lisp
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(display-time-mode t)
+   '(global-command-log-mode t)
+   '(inhibit-startup-screen t)
+   '(ivy-mode t)
+   '(menu-bar-mode nil)
+   '(package-selected-packages
+     '(org-bullets evil-magit magit counsel-projectile projectile hydra evil-collection evil general doom-themes helpful ivy-rich which-key rainbow-delimiters doom-modeline counsel ivy use-package exwm))
+   '(scroll-bar-mode nil)
+   '(set-fringe-mode 10)
+   '(tool-bar-mode nil)
+   '(visible-bell t))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
 
-;; Disable line numbers for some modes
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda() (display-line-numbers-mode 0))))
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
 
+  ;; Disable line numbers for some modes
+  (dolist (mode '(org-mode-hook
+                  term-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda() (display-line-numbers-mode 0))))
+
+#+end_src
+
+** Theme
+#+begin_src emacs-lisp 
 (load-theme 'doom-dark+ t)
+#+end_src
 
+* Packages
+#+begin_src emacs-lisp
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ("org" . "https://orgmode.org/elpa/")
@@ -45,6 +57,10 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+#+end_src
+
+** Ivy
+#+begin_src emacs-lisp
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
@@ -66,6 +82,10 @@
 (use-package ivy-rich
   :init (ivy-rich-mode 1))
 
+#+end_src
+
+** Doom-Modeline
+#+begin_src emacs-lisp
 ;; NOTE: The first time you load your config on a new machine, need to run following:
 ;; M-x all-the-icons-install-fonts
 (use-package all-the-icons)
@@ -76,12 +96,20 @@
   :ensure t
   :init (doom-modeline-mode t))
 
+#+end_src
+
+** Which-Key
+#+begin_src emacs-lisp
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.3))
 
+#+end_src
+
+** Counsel
+#+begin_src emacs-lisp
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
@@ -89,6 +117,10 @@
 	 :map minibuffer-local-map
 	 ("C-r" . 'counsel-minibuffer-history)))
 
+#+end_src
+
+** Helpful
+#+begin_src emacs-lisp
 (use-package helpful
   :custom
   (counsel-describe-function-function #'helpful-callable)
@@ -99,6 +131,10 @@
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
+#+end_src
+
+** Evil
+#+begin_src emacs-lisp
 (defun gg/evil-hook ()
   (dolist (mode '(custom-mode
 		  gim-rebase-mode))
@@ -129,6 +165,10 @@
   :config
   (evil-collection-init))
 
+#+end_src
+
+*** General
+#+begin_src emacs-lisp
 (use-package general
   :config
   (general-create-definer gg/leader-keys
@@ -141,6 +181,9 @@
    "tt" '(counsel-load-theme :which-key "choose theme")
    "ts" '(hydra-text-scale/body :which-key "scale text")))
 
+#+end_src
+** Org
+#+begin_src emacs-lisp
 (defun gg/org-mode-setup ()
 (org-indent-mode)
 (variable-pitch-mode 1)
@@ -156,7 +199,10 @@
 
 (require 'org-tempo)
 (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+#+end_src
 
+*** Auto-tangle Configuration Files
+#+begin_src emacs-lisp
 (defun gg/org-babel-tangle-config ()
 (when (string-equal (buffer-file-name)
                     (expand-file-name "~/Projects/Code/dotfiles/.config/emacs-config.org"))
@@ -165,11 +211,18 @@
     (org-babel-tangle)))
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'gg/org-babel-tangle-config))))
 
+#+end_src
+
+*** Configure Babel Languages
+#+begin_src emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
    (python . t)))
+#+end_src
 
+** Hydra
+#+begin_src emacs-lisp
 (use-package hydra)
 
 (defhydra hydra-text-scale (:timeout 4)
@@ -178,6 +231,10 @@
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t))
 
+#+end_src
+
+** Projectile
+#+begin_src emacs-lisp
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
@@ -192,10 +249,19 @@
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
+#+end_src
+
+** Magit
+#+begin_src emacs-lisp
 (use-package magit
   :commands (magit-status magit-get-current-branch)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+#+end_src
+
+** Rainbow-Delimiters
+#+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src

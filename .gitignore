@@ -1,2 +1,3 @@
 .config/nvim/autoload
 *__pycache__
+/.config/emacs-config.org~
