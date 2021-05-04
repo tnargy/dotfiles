@@ -1,6 +1,0 @@
-#!/bin/bash
-sudo apt update
-sudo apt upgrade -y
-sudo apt install fish fzf git neovim nodejs npm ranger ripgrep silversearcher-ag tmux
-ln -s dotfiles/.tmux.conf
-ln -s dotfiles/.config
