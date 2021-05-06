@@ -40,225 +40,243 @@
 
 * Packages
 #+begin_src emacs-lisp
-(require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+  (require 'package)
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
 
-(package-initialize)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+  (package-initialize)
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
 
-(require 'use-package)
-(setq use-package-always-ensure t)
+  (require 'use-package)
+  (setq use-package-always-ensure t)
 
 #+end_src
 
 ** Ivy
 #+begin_src emacs-lisp
-(use-package ivy
-  :diminish
-  :bind (("C-s" . swiper)
-	 :map ivy-minibuffer-map
-	 ("TAB" . ivy-alt-done)
-	 ("C-l" . ivy-alt-done)
-	 ("C-j" . ivy-next-line)
-	 ("C-k" . ivy-previous-line)
-	 :map ivy-switch-buffer-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-l" . ivy-done)
-	 ("C-d" . ivy-switch-buffer-kill)
-	 :map ivy-reverse-i-search-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1))
+  (use-package ivy
+    :diminish
+    :bind (("C-s" . swiper)
+           :map ivy-minibuffer-map
+           ("TAB" . ivy-alt-done)
+           ("C-l" . ivy-alt-done)
+           ("C-j" . ivy-next-line)
+           ("C-k" . ivy-previous-line)
+           :map ivy-switch-buffer-map
+           ("C-k" . ivy-previous-line)
+           ("C-l" . ivy-done)
+           ("C-d" . ivy-switch-buffer-kill)
+           :map ivy-reverse-i-search-map
+           ("C-k" . ivy-previous-line)
+           ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
 
-(use-package ivy-rich
-  :init (ivy-rich-mode 1))
+  (use-package ivy-rich
+    :init (ivy-rich-mode 1))
 
 #+end_src
 
 ** Doom-Modeline
 #+begin_src emacs-lisp
-;; NOTE: The first time you load your config on a new machine, need to run following:
-;; M-x all-the-icons-install-fonts
-(use-package all-the-icons)
+  ;; NOTE: The first time you load your config on a new machine, need to run following:
+  ;; M-x all-the-icons-install-fonts
+  (use-package all-the-icons)
 
-(use-package doom-themes)
-(load-theme 'doom-dark+ t)
+  (use-package doom-themes)
+  (load-theme 'doom-dark+ t)
 
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode t))
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode t))
 
 #+end_src
 
 ** Which-Key
 #+begin_src emacs-lisp
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.3))
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.3))
 
 #+end_src
 
 ** Counsel
 #+begin_src emacs-lisp
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-ibuffer)
-	 ("C-x C-f" . counsel-find-file)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history)))
+  (use-package counsel
+    :bind (("M-x" . counsel-M-x)
+           ("C-x b" . counsel-ibuffer)
+           ("C-x C-f" . counsel-find-file)
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history)))
 
 #+end_src
 
 ** Helpful
 #+begin_src emacs-lisp
-(use-package helpful
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+  (use-package helpful
+    :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable)
+    :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command] . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key] . helpful-key))
 
 #+end_src
 
 ** Evil
 #+begin_src emacs-lisp
-(defun gg/evil-hook ()
-  (dolist (mode '(custom-mode
-		  gim-rebase-mode))
-    (add-to-list 'evil-emacs-state-modes mode)))
+  (defun gg/evil-hook ()
+    (dolist (mode '(custom-mode
+                    gim-rebase-mode))
+      (add-to-list 'evil-emacs-state-modes mode)))
 
-(use-package evil
-  :demand t
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :hook (evil-mode . gg/evil-hook)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+  (use-package evil
+    :demand t
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    :hook (evil-mode . gg/evil-hook)
+    :config
+    (evil-mode 1)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-  ;; Use visual line motions even outside visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+    ;; Use visual line motions even outside visual-line-mode buffers
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-  (evil-set-initial-state 'message-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+    (evil-set-initial-state 'message-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal))
 
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
 
 #+end_src
 
 *** General
 #+begin_src emacs-lisp
-(use-package general
-  :config
-  (general-create-definer gg/leader-keys
-    :keymaps '(normal insert visual emacs)
-    :prefix "SPC"
-    :global-prefix "C-SPC")
+  (use-package general
+    :config
+    (general-create-definer gg/leader-keys
+      :keymaps '(normal insert visual emacs)
+      :prefix "SPC"
+      :global-prefix "C-SPC")
 
-  (gg/leader-keys
-   "t"  '(:ignore t :which-key "toggles")
-   "tt" '(counsel-load-theme :which-key "choose theme")
-   "ts" '(hydra-text-scale/body :which-key "scale text")))
+    (gg/leader-keys
+     "t"  '(:ignore t :which-key "toggles")
+     "tt" '(counsel-load-theme :which-key "choose theme")
+     "ts" '(hydra-text-scale/body :which-key "scale text")))
 
 #+end_src
 ** Org
 #+begin_src emacs-lisp
-(defun gg/org-mode-setup ()
-(org-indent-mode)
-(variable-pitch-mode 1)
-(auto-fill-mode 0)
-(visual-line-mode 1)
-(setq evil-auto-indent nil))
+  (defun gg/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (auto-fill-mode 0)
+  (visual-line-mode 1)
+  (setq evil-auto-indent nil))
 
-(use-package org
-:hook (org-mode . gg/org-mode-setup))
+  (use-package org
+  :hook (org-mode . gg/org-mode-setup))
 
-(use-package org-bullets
-:after org)
+  (use-package org-bullets
+  :after org)
 
-(require 'org-tempo)
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (require 'org-tempo)
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
 #+end_src
 
 *** Auto-tangle Configuration Files
 #+begin_src emacs-lisp
-(defun gg/org-babel-tangle-config ()
-(when (string-equal (buffer-file-name)
-                    (expand-file-name "~/Projects/Code/dotfiles/.config/emacs-config.org"))
-;; Dynamic scoping to the rescue
-(let ((org-confirm-babel-evaluate nil))
-    (org-babel-tangle)))
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'gg/org-babel-tangle-config))))
+  (defun gg/org-babel-tangle-config ()
+  (when (string-equal (buffer-file-name)
+                      (expand-file-name "~/Projects/Code/dotfiles/.config/emacs-config.org"))
+  ;; Dynamic scoping to the rescue
+  (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle)))
+  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'gg/org-babel-tangle-config))))
 
 #+end_src
 
 *** Configure Babel Languages
 #+begin_src emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (python . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)))
 #+end_src
 
 ** Hydra
 #+begin_src emacs-lisp
-(use-package hydra)
+  (use-package hydra)
 
-(defhydra hydra-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out")
-  ("f" nil "finished" :exit t))
+  (defhydra hydra-text-scale (:timeout 4)
+    "scale text"
+    ("j" text-scale-increase "in")
+    ("k" text-scale-decrease "out")
+    ("f" nil "finished" :exit t))
 
 #+end_src
 
 ** Projectile
 #+begin_src emacs-lisp
-(use-package projectile
-  :diminish projectile-mode
-  :config (projectile-mode)
-  :custom ((projectile-completion-system 'ivy))
-  :bind-keymap
-  ("C-c p" . projectile-command-map)
-  :init
-  (when (file-directory-p "~/Projects/Code")
-    (setq projectile-project-search-path '("~/Projects/Code")))
-  (setq projectile-switch-project-action #'projectile-dired))
+  (use-package projectile
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :init
+    (when (file-directory-p "~/Projects/Code")
+      (setq projectile-project-search-path '("~/Projects/Code")))
+    (setq projectile-switch-project-action #'projectile-dired))
 
-(use-package counsel-projectile
-  :config (counsel-projectile-mode))
+  (use-package counsel-projectile
+    :config (counsel-projectile-mode))
 
 #+end_src
 
 ** Magit
 #+begin_src emacs-lisp
-(use-package magit
-  :commands (magit-status magit-get-current-branch)
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+  (use-package magit
+    :commands (magit-status magit-get-current-branch)
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 #+end_src
 
 ** Rainbow-Delimiters
 #+begin_src emacs-lisp
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+** File Management
+#+begin_src emacs-lisp
+      (use-package dired
+        :ensure nil
+        :commands (dired dired-jump)
+        :bind (("C-x C-j" . dired-jump))
+        :custom  ((dired-listing-switches "-agho --group-directories-first"))
+        :config
+        (evil-collection-define-key 'normal 'dired-mode-map
+          "h" 'dired-single-up-directory
+          "l" 'dired-single-buffer))
+
+    (use-package dired-single)
+    (use-package all-the-icons-dired
+      :hook (dired-mode . all-the-icons-dired-mode))
+
 #+end_src
