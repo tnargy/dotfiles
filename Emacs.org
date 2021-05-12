@@ -345,14 +345,14 @@
 #+end_src
 
 *** LightDM
-#+begin_src sh :tangle=~/.emacs.d/exwm/start-exwm.sh
+#+begin_src sh :tangle ~/.emacs.d/exwm/start-exwm.sh
 
   #!/bin/sh
 
   exec dbus-launch --exit-with-session emacs -mm --debug-init
 #+end_src
 
-#+begin_src sh :tangle=~/.emacs.d/exwm/exwm.desktop
+#+begin_src sh :tangle ~/.emacs.d/exwm/exwm.desktop
 
   [Desktop Entry]
   Name=exwm
