@@ -111,6 +111,7 @@
     :bind (("M-x" . counsel-M-x)
            ("C-x b" . counsel-ibuffer)
            ("C-x C-f" . counsel-find-file)
+           ("C-M-j" . counsel-switch-buffer)
            :map minibuffer-local-map
            ("C-r" . 'counsel-minibuffer-history)))
 
@@ -305,6 +306,7 @@
             ?\M-`
             ?\M-&
             ?\M-:
+            ?\C-M-j
             ?\C-\ )) ;; Ctrl Space
 
     ;; Ctrl+Q will enable the next key to be sent directly
@@ -342,3 +344,20 @@
     (exwm-enable))
 #+end_src
 
+*** LightDM
+#+begin_src sh :tangle=~/.emacs.d/exwm/start-exwm.sh
+
+  #!/bin/sh
+
+  exec dbus-launch --exit-with-session emacs -mm --debug-init
+#+end_src
+
+#+begin_src sh :tangle=~/.emacs.d/exwm/exwm.desktop
+
+  [Desktop Entry]
+  Name=exwm
+  Comment=Emacs Windows Manager
+  Exec=sh /home/ggandy/.emacs.d/exwm/start-exwm.sh
+  TryExec=sh
+  Type=Application
+#+end_src
