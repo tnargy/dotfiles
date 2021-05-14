@@ -284,7 +284,6 @@
 #+end_src
 
 * Window Management
-
 ** EXWM
 #+begin_src emacs-lisp
   (defun gg/exwm-update-class ()
@@ -307,7 +306,6 @@
             ?\M-`
             ?\M-&
             ?\M-:
-            ?\C-M-j
             ?\C-\ )) ;; Ctrl Space
 
     ;; Ctrl+Q will enable the next key to be sent directly
@@ -361,4 +359,15 @@
   Exec=sh /home/ggandy/.emacs.d/exwm/start-exwm.sh
   TryExec=sh
   Type=Application
+#+end_src
+
+* Development
+** Languages
+*** Python
+#+begin_src emacs-lisp
+  (use-package python-mode
+    :ensure nil
+    :hook (python-mode . lsp-deferred)
+    :custom
+    (python-shell-interpreter "python3"))
 #+end_src
