@@ -1,5 +1,5 @@
 #+TITLE: Emacs Configuration
-#+PROPERTY: header-args:emacs-lisp :tangle ./.config/init.el
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el
 
 * Basic UI Configuration
 #+begin_src emacs-lisp
@@ -203,12 +203,13 @@
 *** Auto-tangle Configuration Files
 #+begin_src emacs-lisp
   (defun gg/org-babel-tangle-config ()
-  (when (string-equal (buffer-file-name)
-                      (expand-file-name "~/Projects/Code/dotfiles/.config/emacs-config.org"))
-  ;; Dynamic scoping to the rescue
-  (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle)))
-  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'gg/org-babel-tangle-config))))
+    (when (string-equal (file-name-directory (buffer-file-name))
+                         (expand-file-name "~/dotfiles/"))
+       ;; Dynamic scoping to the rescue
+       (let ((org-confirm-babel-evaluate nil))
+         (org-babel-tangle))))
+
+  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'gg/org-babel-tangle-config)))
 
 #+end_src
 
@@ -281,84 +282,6 @@
     (use-package all-the-icons-dired
       :hook (dired-mode . all-the-icons-dired-mode))
 
-#+end_src
-
-* Window Management
-** EXWM
-#+begin_src emacs-lisp
-  (defun gg/exwm-update-class ()
-    (exwm-workspace-rename-buffer exwm-class-name))
-
-  (use-package exwm
-    :config
-    ;; Sets default number of workspaces
-    (setq exwm-workspace-number 5)
-
-    ;; When window "class" updates, use it to set the buffer name
-    (add-hook 'exwm-update-class-hook #'gg/exwm-update-class)
-
-    ;; These keys shoudl always pass through to Emacs
-    (setq exwm-input-prefix-keys
-          '(?\C-x
-            ?\C-u
-            ?\C-h
-            ?\M-x
-            ?\M-`
-            ?\M-&
-            ?\M-:
-            ?\C-\ )) ;; Ctrl Space
-
-    ;; Ctrl+Q will enable the next key to be sent directly
-    (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
-
-    ;; Global Key Bindings
-    (setq exwm-input-global-keys
-          `(
-            ;; Reset to line-mode (C-c C-k switches to char-mode)
-            ([?\s-r] . exwm-reset)
-
-            ;; Move between windows
-            ([?\s-h] . winmove-left)
-            ([?\s-l] . winmove-right)
-            ([?\s-k] . winmove-up)
-            ([?\s-j] . winmove-down)
-
-            ;; Launch applications via shell command
-            ([?\s-&] . (lambda (command)
-                         (interactive (list (read-shell-command "$ ")))
-                         (start-process-shell-command command nil command)))
-
-            ;; Switch workspace
-            ([?\s-w] . exwm-workspace-switch)
-            ([?\s-`] . (lambda () (interactive)
-                         (exwm-workspace-switch-create 0)))
-
-            ;; 's-N switch to certain workspace via numbers
-            ,@(mapcar (lambda (i)
-                        `(,(kbd (format "s-%d" i)) .
-                          (lambda ()
-                          (interactive)
-                          (exwm-workspace-switch-create ,i))))
-                      (number-sequence 0 9))))
-    (exwm-enable))
-#+end_src
-
-*** LightDM
-#+begin_src sh :tangle ~/.emacs.d/exwm/start-exwm.sh
-
-  #!/bin/sh
-
-  exec dbus-launch --exit-with-session emacs -mm --debug-init
-#+end_src
-
-#+begin_src sh :tangle ~/.emacs.d/exwm/exwm.desktop
-
-  [Desktop Entry]
-  Name=exwm
-  Comment=Emacs Windows Manager
-  Exec=sh /home/ggandy/.emacs.d/exwm/start-exwm.sh
-  TryExec=sh
-  Type=Application
 #+end_src
 
 * Development
