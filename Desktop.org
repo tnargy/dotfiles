@@ -2,71 +2,13 @@
 #+TITLE: Desktop Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/desktop.el
 
-* EXWM
-#+begin_src emacs-lisp
-  (defun gg/exwm-update-class ()
-    (exwm-workspace-rename-buffer exwm-class-name))
-
-  (use-package exwm
-    :config
-    ;; Sets default number of workspaces
-    (setq exwm-workspace-number 5)
-
-    ;; When window "class" updates, use it to set the buffer name
-    (add-hook 'exwm-update-class-hook #'gg/exwm-update-class)
-
-    ;; These keys shoudl always pass through to Emacs
-    (setq exwm-input-prefix-keys
-          '(?\C-x
-            ?\C-u
-            ?\C-h
-            ?\M-x
-            ?\M-`
-            ?\M-&
-            ?\M-:
-            ?\C-\ )) ;; Ctrl Space
-
-    ;; Ctrl+Q will enable the next key to be sent directly
-    (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
-
-    ;; Global Key Bindings
-    (setq exwm-input-global-keys
-          `(
-            ;; Reset to line-mode (C-c C-k switches to char-mode)
-            ([?\s-r] . exwm-reset)
-
-            ;; Move between windows
-            ([?\s-h] . winmove-left)
-            ([?\s-l] . winmove-right)
-            ([?\s-k] . winmove-up)
-            ([?\s-j] . winmove-down)
-
-            ;; Launch applications via shell command
-            ([?\s-&] . (lambda (command)
-                         (interactive (list (read-shell-command "$ ")))
-                         (start-process-shell-command command nil command)))
-
-            ;; Switch workspace
-            ([?\s-w] . exwm-workspace-switch)
-            ([?\s-`] . (lambda () (interactive)
-                         (exwm-workspace-switch-create 0)))
-
-            ;; 's-N switch to certain workspace via numbers
-            ,@(mapcar (lambda (i)
-                        `(,(kbd (format "s-%d" i)) .
-                          (lambda ()
-                          (interactive)
-                          (exwm-workspace-switch-create ,i))))
-                      (number-sequence 0 9))))
-    (exwm-enable))
-#+end_src
-
 * LightDM
 #+begin_src sh :tangle ~/.emacs.d/exwm/start-exwm.sh :mkdirp yes
 
-#!/bin/sh
+  #!/bin/sh
 
-exec dbus-launch --exit-with-session emacs -mm --debug-init -l ~/.emacs.d/desktop.el
+  picom &
+  exec dbus-launch --exit-with-session emacs -mm --debug-init -l ~/.emacs.d/desktop.el
 
 #+end_src
 
@@ -78,4 +20,98 @@ Comment=Emacs Windows Manager
 Exec=sh /home/ggandy/.emacs.d/exwm/start-exwm.sh
 TryExec=sh
 Type=Application
+#+end_src
+
+* EXWM
+#+begin_src emacs-lisp
+
+      (defun gg/run-in-background (command)
+        (let ((comand-parts (split-string command "[ ]+")))
+          (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+
+      (defun gg/set-wallpaper ()
+        (interactive)
+        (start-process-shell-command
+         "nitrogen" nil "nitrogen --restore"))
+
+      (defun gg/exwm-init-hook ()
+        ;; Default to workspace 1 instead of 0
+        (exwm-workspace-switch-create 1)
+
+        ;; Open default apps
+        (eshell)
+
+        ;; Launch apps that will run in background
+        (gg/run-in-background "pasystray"))
+
+      (defun gg/exwm-update-class ()
+        (exwm-workspace-rename-buffer exwm-class-name))
+
+      (use-package exwm
+        :config
+        ;; Sets default number of workspaces
+        (setq exwm-workspace-number 5)
+
+        ;; When window "class" updates, use it to set the buffer name
+        (add-hook 'exwm-update-class-hook #'gg/exwm-update-class)
+
+        ;; When EXWM starts up, do extra config
+        (add-hook 'exwm-init-hook #'gg/exwm-init-hook)
+
+        (gg/set-wallpaper)
+
+        ;; Load sytem tray before exwm-init
+        (require 'exwm-systemtray)
+        ;;(setq exwm-systemtray-height 32)
+        (exwm-systemtray-enable)
+
+        ;; These keys shoudl always pass through to Emacs
+        (setq exwm-input-prefix-keys
+              '(?\C-x
+                ?\C-u
+                ?\C-h
+                ?\M-x
+                ?\M-`
+                ?\M-&
+                ?\M-:
+                ?\C-\M-j
+                ?\C-\ )) ;; Ctrl Space
+
+        ;; Ctrl+Q will enable the next key to be sent directly
+        (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
+
+        ;; Global Key Bindings
+        (setq exwm-input-global-keys
+              `(
+                ;; Reset to line-mode (C-c C-k switches to char-mode)
+                ([?\s-r] . exwm-reset)
+
+                ;; Move between windows
+                ([?\s-h] . winmove-left)
+                ([?\s-l] . winmove-right)
+                ([?\s-k] . winmove-up)
+                ([?\s-j] . winmove-down)
+
+                ;; Launch applications via shell command
+                ([?\s-&] . (lambda (command)
+                             (interactive (list (read-shell-command "$ ")))
+                             (start-process-shell-command command nil command)))
+
+                ;; Switch workspace
+                ([?\s-w] . exwm-workspace-switch)
+                ([?\s-`] . (lambda () (interactive)
+                             (exwm-workspace-switch-create 0)))
+
+                ;; 's-N switch to certain workspace via numbers
+                ,@(mapcar (lambda (i)
+                            `(,(kbd (format "s-%d" i)) .
+                              (lambda ()
+                                (interactive)
+                                (exwm-workspace-switch-create ,i))))
+                          (number-sequence 0 9))))
+
+        (exwm-input-set-key (kbd "s-SPC") 'counsel-linux-app)
+
+        (exwm-enable))
+
 #+end_src
