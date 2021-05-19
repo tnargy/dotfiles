@@ -26,7 +26,7 @@ Type=Application
 #+begin_src emacs-lisp
 
       (defun gg/run-in-background (command)
-        (let ((comand-parts (split-string command "[ ]+")))
+        (let ((command-parts (split-string command "[ ]+")))
           (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
 
       (defun gg/set-wallpaper ()
