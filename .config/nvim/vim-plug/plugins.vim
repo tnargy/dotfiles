@@ -35,7 +35,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	Plug 'liuchengxu/vim-which-key'
 	Plug 'voldikss/vim-floaterm'
-	Plug 'ChristianChiarulli/codi.vim'
+	Plug 'metakirby5/codi.vim'
 	Plug 'honza/vim-snippets'
 
 call plug#end()
