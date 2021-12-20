@@ -17,7 +17,7 @@
 [Desktop Entry]
 Name=exwm
 Comment=Emacs Windows Manager
-Exec=sh /home/ggandy/.emacs.d/exwm/start-exwm.sh
+Exec=sh /home/onyx/.emacs.d/exwm/start-exwm.sh
 TryExec=sh
 Type=Application
 #+end_src
